@@ -259,7 +259,7 @@ module "searchServices" {
   source = "./core/search"
 
   name     = var.searchServicesName != "" ? var.searchServicesName : "infoasst-search-${random_string.random.result}"
-  location = var.location
+  location = "northeurope"
   tags     = local.tags
   # aad_auth_failure_mode = "http401WithBearerChallenge"
   # sku_name = var.searchServicesSkuName

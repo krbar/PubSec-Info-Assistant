@@ -10,6 +10,7 @@ resource "azurerm_key_vault" "kv" {
   enabled_for_template_deployment = true
   soft_delete_retention_days  = 7
   purge_protection_enabled    = true
+  enable_rbac_authorization   = true
 }
 
  
@@ -32,6 +33,17 @@ resource "azurerm_key_vault_access_policy" "infoasst" {
     ]
 }
 
+locals {
+  // we're using timeadd and we can't pass the day directly need to be hours
+  // ToDo: add variable Days_to_expire in script
+  // days_to_hours = var.days_to_expire * 24
+  days_to_hours = 31 * 24
+  // expiration date need to be in a specific format as well
+  expiration_date = timeadd(formatdate("YYYY-MM-DD'T'HH:mm:ssZ", timestamp()), "${local.days_to_hours}h")
+  
+  // add "expiration_date = local.expiration_date" to ressource
+}
+
 resource "azurerm_key_vault_secret" "spClientKeySecret" {
   depends_on  = [
     azurerm_key_vault_access_policy.infoasst,
@@ -40,6 +52,7 @@ resource "azurerm_key_vault_secret" "spClientKeySecret" {
   name         = "AZURE-CLIENT-SECRET"
   value        = var.spClientSecret
   key_vault_id = azurerm_key_vault.kv.id
+  expiration_date = local.expiration_date
 }
 
 output "keyVaultName" {

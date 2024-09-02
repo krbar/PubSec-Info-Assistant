@@ -71,10 +71,22 @@ resource "azurerm_cosmosdb_sql_container" "log_container" {
   }
 }
 
+locals {
+  // we're using timeadd and we can't pass the day directly need to be hours
+  // ToDo: add variable Days_to_expire in script
+  // days_to_hours = var.days_to_expire * 24
+  days_to_hours = 31 * 24
+  // expiration date need to be in a specific format as well
+  expiration_date = timeadd(formatdate("YYYY-MM-DD'T'HH:mm:ssZ", timestamp()), "${local.days_to_hours}h")
+  
+  // add "expiration_date = local.expiration_date" to ressource
+}
+
 resource "azurerm_key_vault_secret" "cosmos_db_key" {
-  name         = "COSMOSDB-KEY"
-  value        = azurerm_cosmosdb_account.cosmosdb_account.primary_key
-  key_vault_id = var.keyVaultId
+  name                = "COSMOSDB-KEY"
+  value               = azurerm_cosmosdb_account.cosmosdb_account.primary_key
+  key_vault_id        = var.keyVaultId
+  expiration_date     = local.expiration_date
 }
 
 output "CosmosDBEndpointURL" {

@@ -51,16 +51,29 @@ resource "azurerm_storage_queue" "queue" {
   storage_account_name = azurerm_storage_account.storage.name
 }
 
+locals {
+  // we're using timeadd and we can't pass the day directly need to be hours
+  // ToDo: add variable Days_to_expire in script
+  // days_to_hours = var.days_to_expire * 24
+  days_to_hours = 31 * 24
+  // expiration date need to be in a specific format as well
+  expiration_date = timeadd(formatdate("YYYY-MM-DD'T'HH:mm:ssZ", timestamp()), "${local.days_to_hours}h")
+  
+  // add "expiration_date = local.expiration_date" to ressource
+}
+
 resource "azurerm_key_vault_secret" "storage_connection_string" {
   name         = "BLOB-CONNECTION-STRING"
   value        = azurerm_storage_account.storage.primary_connection_string
   key_vault_id = var.keyVaultId
+  expiration_date = local.expiration_date
 }
 
 resource "azurerm_key_vault_secret" "storage_key" {
   name         = "AZURE-BLOB-STORAGE-KEY"
   value        = azurerm_storage_account.storage.primary_access_key
   key_vault_id = var.keyVaultId
+  expiration_date = local.expiration_date
 }
 
 resource "azurerm_storage_blob" "config" {
