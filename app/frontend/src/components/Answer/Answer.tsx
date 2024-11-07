@@ -15,6 +15,7 @@ import CharacterStreamer from "../CharacterStreamer/CharacterStreamer";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeRaw from "rehype-raw";
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     answer: ChatResponse;
@@ -55,6 +56,7 @@ export const Answer = ({
     setAnswer,
     setError
 }: Props) => {
+    const { t } = useTranslation();
     const parsedAnswer = useMemo(() => parseAnswerToHtml(answer.answer, answer.approach, answer.work_citation_lookup, answer.web_citation_lookup, answer.thought_chain, onCitationClicked), [answer]);
 
     return (
@@ -71,8 +73,8 @@ export const Answer = ({
                             <IconButton
                                 style={{ color: "black" }}
                                 iconProps={{ iconName: "Lightbulb" }}
-                                title="Show thought process"
-                                ariaLabel="Show thought process"
+                                title={t('show_thought_process')}
+                                ariaLabel={t('show_thought_process')}
                                 onClick={() => onThoughtProcessClicked()}
                                 disabled={!answer.thoughts}
                             />
@@ -81,8 +83,8 @@ export const Answer = ({
                             <IconButton
                                 style={{ color: "black" }}
                                 iconProps={{ iconName: "ClipboardList" }}
-                                title="Show supporting content"
-                                ariaLabel="Show supporting content"
+                                title={t('show_supporting_content')}
+                                ariaLabel={t('show_supporting_content')}
                                 onClick={() => onSupportingContentClicked()}
                                 disabled={!answer.data_points || !answer.data_points.length}
                             />
@@ -94,7 +96,7 @@ export const Answer = ({
             <Stack.Item grow>
                 {(answer.approach != Approaches.GPTDirect) &&
                     <div className={styles.protectedBanner}>
-                        <ShieldCheckmark20Regular></ShieldCheckmark20Regular>Your personal and company data are protected
+                        <ShieldCheckmark20Regular></ShieldCheckmark20Regular>{t('your_personal_and_company_data_are_protected')}
                     </div>
                 }
                 { answer.answer && <div className={answer.approach == Approaches.GPTDirect ? styles.answerTextUngrounded : styles.answerText}><ReactMarkdown children={parsedAnswer.answerHtml} rehypePlugins={[rehypeRaw, rehypeSanitize]}></ReactMarkdown></div> }
@@ -112,7 +114,7 @@ export const Answer = ({
             {(parsedAnswer.approach == Approaches.ChatWebRetrieveRead && !!parsedAnswer.web_citations.length) && (
                 <Stack.Item>
                     <Stack horizontal wrap tokens={{ childrenGap: 5 }}>
-                        <span className={styles.citationLearnMore}>Citations:</span>
+                        <span className={styles.citationLearnMore}>{t('citations')}:</span>
                         {parsedAnswer.web_citations.map((x, i) => {
                             const path = getCitationFilePath(x);
                             return (
@@ -129,7 +131,7 @@ export const Answer = ({
             {(parsedAnswer.approach == Approaches.ReadRetrieveRead && !!parsedAnswer.work_citations.length) && (
                 <Stack.Item>
                     <Stack horizontal wrap tokens={{ childrenGap: 5 }}>
-                        <span className={styles.citationLearnMore}>Citations:</span>
+                        <span className={styles.citationLearnMore}>{t('citations')}:</span>
                         {parsedAnswer.work_citations.map((x, i) => {
                             const path = getCitationFilePath(x);
                             return ( 
@@ -146,7 +148,7 @@ export const Answer = ({
                 <div>
                     <Stack.Item>
                         <Stack horizontal wrap tokens={{ childrenGap: 5 }}>
-                            <span className={styles.citationLearnMore}>Web Citations:</span>
+                            <span className={styles.citationLearnMore}>{t('web_citations')}:</span>
                             {parsedAnswer.web_citations.map((x, i) => {
                                 const path = getCitationFilePath(x);
                                 return (
@@ -161,7 +163,7 @@ export const Answer = ({
                     <div style={{ width: "100%", margin: "10px 0" }}></div>
                     <Stack.Item>
                         <Stack horizontal wrap tokens={{ childrenGap: 5 }}>
-                            <span className={styles.citationLearnMore}>Work Citations:</span>
+                            <span className={styles.citationLearnMore}>{t('work_citations')}:</span>
                             {parsedAnswer.work_citations.map((x, i) => {
                                 const path = getCitationFilePath(x);
                                 return ( 
@@ -179,7 +181,7 @@ export const Answer = ({
                 <div>
                     <Stack.Item>
                         <Stack horizontal wrap tokens={{ childrenGap: 5 }}>
-                            <span className={styles.citationLearnMore}>Work Citations:</span>
+                            <span className={styles.citationLearnMore}>{t('work_citations')}:</span>
                             {parsedAnswer.work_citations.map((x, i) => {
                                 const path = getCitationFilePath(x);
                                 return ( 
@@ -193,7 +195,7 @@ export const Answer = ({
                     </Stack.Item>
                     <Stack.Item>
                         <Stack horizontal wrap tokens={{ childrenGap: 5 }}>
-                            <span className={styles.citationLearnMore}>Web Citations:</span>
+                            <span className={styles.citationLearnMore}>{t('web_citations')}:</span>
                             {parsedAnswer.web_citations.map((x, i) => {
                                 const path = getCitationFilePath(x);
                                 return (
@@ -211,7 +213,7 @@ export const Answer = ({
             {!!parsedAnswer.followupQuestions.length && showFollowupQuestions && onFollowupQuestionClicked && (
                 <Stack.Item>
                     <Stack horizontal wrap className={`${!!parsedAnswer.work_citations.length ? styles.followupQuestionsList : !!parsedAnswer.web_citations.length ? styles.followupQuestionsList : ""}`} tokens={{ childrenGap: 6 }}>
-                        <span className={styles.followupQuestionLearnMore}>Follow-up questions:</span>
+                        <span className={styles.followupQuestionLearnMore}>{t('follow_up_questions')}:</span>
                         {parsedAnswer.followupQuestions.map((x, i) => {
                             return (
                                 <a key={i} className={styles.followupQuestion} title={x} onClick={() => onFollowupQuestionClicked(x)}>
@@ -223,7 +225,7 @@ export const Answer = ({
                 </Stack.Item>
             )}
             <Stack.Item>
-                <div className={styles.raiwarning}>AI-generated content may be incorrect</div>
+                <div className={styles.raiwarning}>{t('ai_generated_content_may_be_incorrect')}</div>
             </Stack.Item>
             {answer.answer && <Stack.Item align="center">
                 <RAIPanel approach={answer.approach} chatMode={chatMode} onAdjustClick={onAdjustClick} onRegenerateClick={onRegenerateClick} onWebSearchClicked={onWebSearchClicked} onWebCompareClicked={onWebCompareClicked} onRagCompareClicked={onRagCompareClicked} onRagSearchClicked={onRagSearchClicked} />

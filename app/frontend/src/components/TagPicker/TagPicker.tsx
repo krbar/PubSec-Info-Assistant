@@ -8,6 +8,7 @@ import { Info16Regular } from '@fluentui/react-icons';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { useId } from '@fluentui/react-hooks';
 import { getAllTags } from "../../api";
+import { useTranslation } from 'react-i18next';
 
 import styles from "./TagPicker.module.css";
 
@@ -22,6 +23,7 @@ interface Props {
 
 export const TagPickerInline = ({allowNewTags, onSelectedTagsChange, preSelectedTags, hide}: Props) => {
 
+    const { t } = useTranslation();
     const pickerId = useId('tag-inline-picker');
     const tooltipId = useId('tagpicker-tooltip');
     const hostStyles: Partial<ITooltipHostStyles> = { root: { display: 'inline-block' } };
@@ -84,8 +86,8 @@ export const TagPickerInline = ({allowNewTags, onSelectedTagsChange, preSelected
       };
 
     const pickerSuggestionsProps: IBasePickerSuggestionsProps = {
-      suggestionsHeaderText: 'Existing Tags',
-      noResultsFoundText: allowAddNew ? 'Press Enter to add as a new tag' : 'No matching tag found',
+      suggestionsHeaderText: t('existing_tags'),
+      noResultsFoundText: allowAddNew ? t('press_enter_to_add_as_new_tag') : t('no_matching_tag_found'),
     };
 
     async function fetchTagsfromCosmos() {
@@ -132,8 +134,8 @@ export const TagPickerInline = ({allowNewTags, onSelectedTagsChange, preSelected
             <label htmlFor={pickerId}>Tags</label>
             <TagPicker
                 className={styles.tagPicker}
-                removeButtonAriaLabel="Remove"
-                selectionAriaLabel="Existing tags"
+                removeButtonAriaLabel={t('remove')}
+                selectionAriaLabel={t('existing_tags')}
                 onResolveSuggestions={filterSuggestedTags}
                 onRenderSuggestionsItem={onRenderSuggestionsItem}
                 getTextFromItem={getTextFromItem}
@@ -149,7 +151,7 @@ export const TagPickerInline = ({allowNewTags, onSelectedTagsChange, preSelected
                 onChange={onChange}
             />
           </div>
-          <TooltipHost content={allowAddNew ? "Tags to append to each document uploaded below." : "Tags to filter documents by."}
+          <TooltipHost content={allowAddNew ? t('tags_to_append') : t('tags_to_filter')}
                     styles={hostStyles}
                     id={tooltipId}>
             <Info16Regular></Info16Regular>

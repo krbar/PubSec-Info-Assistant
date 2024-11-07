@@ -7,6 +7,7 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import { initializeIcons } from "@fluentui/react";
 
 import "./index.css";
+import './i18n'; // Import the i18n configuration
 
 import { Layout } from "./pages/layout/Layout";
 import NoPage from "./pages/NoPage";

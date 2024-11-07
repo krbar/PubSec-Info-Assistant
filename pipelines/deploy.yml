@@ -1,0 +1,48 @@
+trigger: none
+
+parameters:
+  - name: sandbox
+    displayName: "Select environment"
+    type: string
+    default: dev
+    values:
+      - dev
+      - poc
+
+pr: none
+
+variables:
+  - group: EUP-InfoAssistant-${{ parameters.sandbox }}
+
+stages:
+  - ${{ if eq(parameters.sandbox, 'dev' ) }}:
+      - stage: DeployDev
+        displayName: "Deploy to DEV environment"
+
+        jobs:
+          - deployment: DeployDev
+            environment: dev
+            timeoutInMinutes: 120
+            pool:
+              vmImage: "ubuntu-latest"
+            strategy:
+              runOnce: #rolling, canary are the other strategies that are supported
+                deploy:
+                  steps:
+                    - template: templates/deploy-template.yml # Path: pipelines/templates/deploy-template.yml
+
+  - ${{ if eq(parameters.sandbox, 'poc' ) }}:
+      - stage: DeployPoc
+        displayName: "Deploy to POC environment"
+
+        jobs:
+          - deployment: DeployPoc
+            environment: poc
+            timeoutInMinutes: 120
+            pool:
+              vmImage: "ubuntu-latest"
+            strategy:
+              runOnce: #rolling, canary are the other strategies that are supported
+                deploy:
+                  steps:
+                    - template: templates/deploy-template.yml # Path: pipelines/templates/deploy-template.yml

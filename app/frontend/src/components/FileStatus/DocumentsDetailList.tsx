@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { useTranslation } from 'react-i18next';
 
 import { DetailsList, 
     DetailsListLayoutMode, 
@@ -57,6 +58,7 @@ interface Props {
 }
 
 export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) => {
+    const { t } = useTranslation();
     const itemsRef = useRef(items);
 
     const onColumnClick = (ev: React.MouseEvent<HTMLElement>, column: IColumn): void => {
@@ -250,10 +252,10 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
     const [columns, setColumns] = useState<IColumn[]> ([
         {
             key: 'file_type',
-            name: 'File Type',
+            name: t('file_type'),
             className: styles.fileIconCell,
             iconClassName: styles.fileIconHeaderIcon,
-            ariaLabel: 'Column operations for File type, Press to sort on File type',
+            ariaLabel: t('file_type_description'),
             iconName: 'Page',
             isIconOnly: true,
             fieldName: 'name',
@@ -273,14 +275,14 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
                     src = `https://res-1.cdn.office.net/files/fabric-cdn-prod_20221209.001/assets/item-types/16/${item.iconName}.svg`;
                     return (
                         <TooltipHost content={`${item.fileType} file`}>
-                            <img src={src} className={styles.fileIconImg} alt={`${item.fileType} file icon`} />
+                            <img src={src} className={styles.fileIconImg} alt={`${item.fileType} ${t('file_icon')}`} />
                         </TooltipHost>
                     );
                 } else {
                     // The file type is not supported, return a default icon
                     return (
                         <TooltipHost content={`${item.fileType} file`}>
-                            <DocumentFolderFilled className={styles.fileIconImg} aria-label={`${item.fileType} file icon`} fontSize="16px"/>
+                            <DocumentFolderFilled className={styles.fileIconImg} aria-label={`${item.fileType} ${t('file_icon')}`} fontSize="16px"/>
                         </TooltipHost>
                     );
                 }
@@ -288,7 +290,7 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
         },
         {
             key: 'name',
-            name: 'Name',
+            name: t('name'),
             fieldName: 'name',
             minWidth: 210,
             maxWidth: 350,
@@ -302,12 +304,12 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
         },
         {
             key: 'state',
-            name: 'State',
+            name: t('state'),
             fieldName: 'state',
             minWidth: 70,
             maxWidth: 90,
             isResizable: true,
-            ariaLabel: 'Column operations for state, Press to sort by states',
+            ariaLabel: t('state_description'),
             onColumnClick: onColumnClick,
             data: 'string',
             onRender: (item: IDocument) => (
@@ -321,37 +323,37 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
         },
         {
             key: 'fileFolder',
-            name: 'Folder',
+            name: t('folder'),
             fieldName: 'fileFolder',
             minWidth: 70,
             maxWidth: 90,
             isResizable: true,
-            ariaLabel: 'Column operations for folder, Press to sort by folder',
+            ariaLabel: t('folder_description'),
             onColumnClick: onColumnClick,
             data: 'string',
         },
         {
             key: 'tags',
-            name: 'Tags',
+            name: t('tags'),
             fieldName: 'tags',
             minWidth: 70,
             maxWidth: 90,
             isResizable: true,
-            sortAscendingAriaLabel: 'Sorted A to Z',
-            sortDescendingAriaLabel: 'Sorted Z to A',
+            sortAscendingAriaLabel: t('sorted_a_to_z'),
+            sortDescendingAriaLabel: t('sorted_z_to_a'),
             onColumnClick: onColumnClick,
             data: 'string',
             isPadded: true,
         },
         {
             key: 'upload_timestamp',
-            name: 'Submitted On',
+            name: t('submitted_on'),
             fieldName: 'upload_timestamp',
             minWidth: 90,
             maxWidth: 120,
             isResizable: true,
             isCollapsible: true,
-            ariaLabel: 'Column operations for submitted on date, Press to sort by submitted date',
+            ariaLabel: t('submitted_on_description'),
             data: 'string',
             onColumnClick: onColumnClick,
             onRender: (item: IDocument) => {
@@ -361,17 +363,17 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
         },
         {
             key: 'modified_timestamp',
-            name: 'Last Updated',
+            name: t('last_updated'),
             fieldName: 'modified_timestamp',
             minWidth: 90,
             maxWidth: 120,
             isResizable: true,
             isSorted: true,
             isSortedDescending: false,
-            sortAscendingAriaLabel: 'Sorted Oldest to Newest',
-            sortDescendingAriaLabel: 'Sorted Newest to Oldest',
+            sortAscendingAriaLabel:  t('sort_oldest_to_newest'),
+            sortDescendingAriaLabel: t('sort_newest_to_oldest'),
             isCollapsible: true,
-            ariaLabel: 'Column operations for last updated on date, Press to sort by last updated date',
+            ariaLabel: t('last_updated_description'),
             data: 'number',
             onColumnClick: onColumnClick,
             onRender: (item: IDocument) => {
@@ -380,13 +382,13 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
         },
         {
             key: 'state_description',
-            name: 'Status Detail',
+            name: t('status_detail'),
             fieldName: 'state_description',
             minWidth: 90,
             maxWidth: 200,
             isResizable: true,
             isCollapsible: true,
-            ariaLabel: 'Column operations for status detail',
+            ariaLabel: t('status_detail_description'),
             data: 'string',
             onColumnClick: onColumnClick,
             onRender: (item: IDocument) => (
@@ -402,20 +404,20 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
     return (
         <div>
             <div className={styles.buttonsContainer}>
-                <div className={`${styles.refresharea} ${styles.divSpacing}`} onClick={onRefresh} aria-label=" Refresh">
+                <div className={`${styles.refresharea} ${styles.divSpacing}`} onClick={onRefresh} aria-label={" " + t('refresh') }>
                     <ArrowClockwise24Regular className={styles.refreshicon} />
-                    <span className={`${styles.refreshtext} ${styles.centeredText}`}>Refresh</span>
+                    <span className={`${styles.refreshtext} ${styles.centeredText}`}>{t('refresh')}</span>
                 </div>        
-                <div className={`${styles.refresharea} ${styles.divSpacing}`} onClick={handleDeleteClick} aria-label=" Delete">
+                <div className={`${styles.refresharea} ${styles.divSpacing}`} onClick={handleDeleteClick} aria-label={" " + t('delete') }>
                     <Delete24Regular className={styles.refreshicon} />
-                    <span className={`${styles.refreshtext} ${styles.centeredText}`}>Delete</span>
+                    <span className={`${styles.refreshtext} ${styles.centeredText}`}>{t('delete')}</span>
                 </div>
-                <div className={`${styles.refresharea} ${styles.divSpacing}`} onClick={handleResubmitClick} aria-label=" Resubmit">
+                <div className={`${styles.refresharea} ${styles.divSpacing}`} onClick={handleResubmitClick} aria-label={" " + t('resubmit') }>
                     <Send24Regular className={styles.refreshicon} />
-                    <span className={`${styles.refreshtext} ${styles.centeredText}`}>Resubmit</span>
+                    <span className={`${styles.refreshtext} ${styles.centeredText}`}>{t('resubmit')}</span>
                 </div>
             </div>
-            <span className={styles.footer}>{"(" + items.length as string + ") records."}</span>
+            <span className={styles.footer}>{"(" + items.length as string + ") " + t('records') + "."}</span>
             <DetailsList
                 items={itemList}
                 compact={true}
@@ -428,7 +430,7 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
                 isHeaderVisible={true}
                 onItemInvoked={onItemInvoked}
             />
-            <span className={styles.footer}>{"(" + items.length as string + ") records."}</span>
+            <span className={styles.footer}>{"(" + items.length as string + ") " + t('records') + "."}</span>
             {/* <Button text="Delete" onClick={handleDeleteClick} style={{ marginRight: '10px' }} />
             <Button text="Resubmit" onClick={handleResubmitClick} /> */}
             {/* Dialog for delete confirmation */}
@@ -437,8 +439,8 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
                 onDismiss={() => setIsDeleteDialogVisible(false)}
                 dialogContentProps={{
                     type: DialogType.normal,
-                    title: 'Delete Confirmation',
-                    subText: 'Are you sure you want to delete the selected items?'
+                    title: t('delete_confirmation'),
+                    subText: t('delete_confirmation_message')
                 }}
                 modalProps={{
                     isBlocking: true,
@@ -456,8 +458,8 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
                 onDismiss={() => setIsResubmitDialogVisible(false)}
                 dialogContentProps={{
                     type: DialogType.normal,
-                    title: 'Resubmit Confirmation',
-                    subText: 'Are you sure you want to resubmit the selected items?'
+                    title: t('resubmit_confirmation'),
+                    subText: t('resubmit_confirmation_message')
                 }}
                 modalProps={{
                     isBlocking: true,
@@ -465,8 +467,8 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
                 }}
             >
                 <DialogFooter>
-                    <PrimaryButton onClick={handleResubmit} text="Resubmit" />
-                    <DefaultButton onClick={() => setIsResubmitDialogVisible(false)} text="Cancel" />
+                    <PrimaryButton onClick={handleResubmit} text={t('resubmit')} />
+                    <DefaultButton onClick={() => setIsResubmitDialogVisible(false)} text={t('cancel')} />
                 </DialogFooter>
             </Dialog>
             <div>
@@ -477,8 +479,8 @@ export const DocumentsDetailList = ({ items, onFilesSorted, onRefresh }: Props) 
                     isOpen={stateDialogVisible}
                     isBlocking={false}
                     onDismiss={() => setStateDialogVisible(false)}
-                    closeButtonAriaLabel="Close"
-                    onRenderFooterContent={() => <DefaultButton onClick={() => setStateDialogVisible(false)}>Close</DefaultButton>}
+                    closeButtonAriaLabel={t('close')}
+                    onRenderFooterContent={() => <DefaultButton onClick={() => setStateDialogVisible(false)}>{t('close')}</DefaultButton>}
                     isFooterAtBottom={true}
                     type={PanelType.medium}
                 >

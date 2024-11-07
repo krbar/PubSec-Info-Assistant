@@ -5,8 +5,11 @@ import { useCallback } from "react";
 import CheckIcon from "./check";
 import ClearIcon from "./clear";
 import styles from "./files-list.module.css";
+import { useTranslation } from 'react-i18next';
 
 const FilesListItem = ({ name, id, onClear, uploadComplete }: {name: any, id: any, onClear: any, uploadComplete: any}) => {
+  const { t } = useTranslation();
+
   const handleClear = useCallback(() => {
     onClear(id);
   }, []);
@@ -18,13 +21,13 @@ const FilesListItem = ({ name, id, onClear, uploadComplete }: {name: any, id: an
         <span
           className={styles.files_list_item_clear}
           role="button"
-          aria-label="remove file"
+          aria-label={t('remove_file')}
           onClick={handleClear}
         >
           <ClearIcon />
         </span>
       ) : (
-        <span role="img" className={styles.file_list_item_check} aria-label="file uploaded successfully">
+        <span role="img" className={styles.file_list_item_check} aria-label={t('file_uploaded_successfully')}>
           <CheckIcon />
         </span>
       )}

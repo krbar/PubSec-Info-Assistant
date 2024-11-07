@@ -16,7 +16,7 @@ import estyles from "../../components/Example/Example.module.css";
 import { Example } from "../../components/Example";
 import { DocumentDataFilled, TableSearchFilled } from "@fluentui/react-icons";
 import CharacterStreamer from '../../components/CharacterStreamer/CharacterStreamer';
-
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   folderPath: string;
@@ -24,6 +24,7 @@ interface Props {
 }
 
 const Tda = ({folderPath, tags}: Props) => {
+  const { t } = useTranslation();
   const [streamKey, setStreamKey] = useState(0);
   const [files, setFiles] = useState<any>([]);
   const [progress, setProgress] = useState(0);
@@ -49,10 +50,10 @@ const Tda = ({folderPath, tags}: Props) => {
 };
 
 const EXAMPLES: ExampleModel[] = [
-    { text: "How many rows are there?", value: "How many rows are there?" },
-    { text: "What are the data types of each column?", value: "What are the data types of each column?" },
-    { text: "Are there any missing values in the dataset?", value: "Are there any missing values in the dataset?" },
-    { text: "What are the summary statistics for categorical data?", value: "What are the summary statistics for categorical data?" }
+    { text: t('how_many_rows_are_there'), value: t('how_many_rows_are_there') },
+    { text: t('what_are_the_data_types_of_each_column'), value: t('what_are_the_data_types_of_each_column') },
+    { text: t('are_there_any_missing_values'), value: t('are_there_any_missing_values') },
+    { text: t('what_are_the_summary_statistics_for_categorical_data'), value: t('what_are_the_summary_statistics_for_categorical_data') }
 ];
 
 interface Props {
@@ -89,7 +90,7 @@ const fetchImages = async () => {
           console.log(eventSourceRef.current);
           setStreamKey(prevKey => prevKey + 1);
         } else {
-          setOutput("no file file has been uploaded.")
+          setOutput(t('no_file_has_been_uploaded'))
         }
       } catch (error) {
         console.log(error);
@@ -119,7 +120,7 @@ const fetchImages = async () => {
 
         }
         else {
-          setOutput("no file file has been uploaded.")
+          setOutput(t('no_file_has_been_uploaded'))
         }
       } catch (error) {
         lastError = error;
@@ -127,7 +128,7 @@ const fetchImages = async () => {
     }
   // If the code reaches here, all retries have failed. Handle the error as needed.
     console.error(lastError);
-    setOutput('An error occurred.');
+    setOutput(t('an_error_occured'));
   };
 
   // handler called when files are selected via the Dropzone component
@@ -182,7 +183,7 @@ const fetchImages = async () => {
           var file = indexedFile.file as File;
           console.log('MAX_CSV_FILE_SIZE:', MAX_CSV_FILE_SIZE);
           if (file.size > MAX_CSV_FILE_SIZE) {
-            alert(`File is too large. Please upload a file smaller than ${maxCSVFileSize?.MAX_CSV_FILE_SIZE} MB.`);
+            alert(t('file_is_too_large') +`${maxCSVFileSize?.MAX_CSV_FILE_SIZE} MB.`);
             setUploadStarted(false);
             return;
             }
@@ -241,7 +242,7 @@ const fetchImages = async () => {
           handleAnswer();
         }
         else {
-          setOutput("no file file has been uploaded.")
+          setOutput(t('no_file_has_been_uploaded'))
         }
       }
   }, [selectedQuery]);
@@ -304,25 +305,25 @@ const handleCloseEvent = () => {
 
   return (<div className={cstyle.contentArea} >
     <div className={cstyle.App} >
-    <TableSearchFilled fontSize={"6rem"} primaryFill={"#7719aa"} aria-hidden="true" aria-label="Supported File Types" />
+    <TableSearchFilled fontSize={"6rem"} primaryFill={"#7719aa"} aria-hidden="true" aria-label={t('supported_file_types')} />
     <h1 className={cstyle.EmptyStateTitle}>
       Tabular Data Assistant
     </h1>
     <span className={styles.chatEmptyObjectives}>
-      <i className={cstyle.centertext}>Information Assistant uses AI. Check for mistakes.</i> <a href="https://github.com/microsoft/PubSec-Info-Assistant/blob/main/docs/transparency.md" target="_blank" rel="noopener noreferrer"> Transparency Note</a>
+      <i className={cstyle.centertext}>{t('information_assistant_ai_note')}</i> <a href="https://github.com/microsoft/PubSec-Info-Assistant/blob/main/docs/transparency.md" target="_blank" rel="noopener noreferrer"> {t('transparency_note')}</a>
     </span>
     
     
     <div className={cstyle.centeredContainer}>
-    <h2 className={styles.EmptyStateTitle}>Supported file types</h2>
+    <h2 className={styles.EmptyStateTitle}>{t('supported_file_types')}</h2>
 
 
-    <DocumentDataFilled fontSize={"40px"} primaryFill={"#7719aa"} aria-hidden="true" aria-label="Data" />
-            <span className={cstyle.EmptyObjectivesListItemText}><b>Data</b><br />
+    <DocumentDataFilled fontSize={"40px"} primaryFill={"#7719aa"} aria-hidden="true" aria-label={t('data')} />
+            <span className={cstyle.EmptyObjectivesListItemText}><b>{t('data')}</b><br />
                 csv<br />
             </span>
             <span className={cstyle.EmptyObjectivesListItemText}>
-            Max file size: {maxCSVFileSize?.MAX_CSV_FILE_SIZE} MB
+            {t('max_file_size')}: {maxCSVFileSize?.MAX_CSV_FILE_SIZE} MB
             </span>
     <br />
     <div className={styles.wrapper}>
@@ -358,14 +359,14 @@ const handleCloseEvent = () => {
             styles.upload_button,
             uploadComplete || uploadStarted ? styles.disabled : ""
           )}
-          aria-label="upload files"
+          aria-label={t('upload_files')}
         >
-          {`Upload ${files.length} Files`}
+          {t('upload') + "" + files.length + " " + t('files')}
         </button>
       ) : null}
     </div>
     
-    <p>Select an example query:</p>
+    <p>{t('select_an_example_query')}:</p>
     <div >
         <ul className={estyles.examplesNavList}>
             {EXAMPLES.map((x, i) => (
@@ -377,26 +378,26 @@ const handleCloseEvent = () => {
     <div >
     
     <br></br>
-    <p>Ask a question about your CSV:</p>
+    <p>{t('ask_a_question_about_your_csv')}:</p>
     <input
       className={cstyle.inputField}
       type="text"
-      placeholder="Enter your query"
+      placeholder={t('enter_your_query')}
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
     />
      <div className={cstyle.buttonContainer}>
-    <Button variant="secondary" onClick={handleAnalysis}>Here is my analysis</Button>
-    <Button variant="secondary" onClick={handleAnswer}>Show me the answer</Button>
+    <Button variant="secondary" onClick={handleAnalysis}>{t('here_is_my_analysis')}</Button>
+    <Button variant="secondary" onClick={handleAnswer}>{t('show_me_the_answer')}</Button>
     </div>
     { (
       <div style={{width: '100%'}}>
-        <h2>Tabular Data Assistant Response:</h2>
+        <h2>{t('tabular_data_assistant_response')}:</h2>
         <div>
           { renderAnswer && 
           <CharacterStreamer key={streamKey} eventSource={eventSourceRef.current} classNames={cstyle.centeredAnswerContainer} nonEventString={output} onStreamingComplete={handleCloseEvent} typingSpeed={10} /> }
         </div>
-        <h2>Generated Images:</h2>
+        <h2>{t('generated_images')}:</h2>
         <div>
           {images.length > 0 ? (
             images.map((image, index) => (
@@ -408,10 +409,10 @@ const handleCloseEvent = () => {
               />
             ))
           ) : (
-            <p>No images generated</p>
+            <p>{t('no_images_generated')}</p>
           )}
         </div>
-        <div className={cstyle.raiwarning}>AI-generated content may be incorrect</div>
+        <div className={cstyle.raiwarning}>{t('ai_generated_content_may_be_incorrect')}</div>
 
       </div>
     )}
@@ -423,7 +424,7 @@ const handleCloseEvent = () => {
     
     <div className={cstyle.centeredContainer}>
     <details style={{ width: '100%' }}>
-  <summary>See Dataframe</summary>
+  <summary>{t('see_dataframe')}</summary>
   <div style={{ width: '100%', height: '500px', overflow: 'auto', direction: 'rtl'  }}>
   <div style={{ direction: 'ltr' }}>
   <DetailsList

@@ -4,6 +4,7 @@
 import { Text } from "@fluentui/react";
 import { Info24Regular } from "@fluentui/react-icons";
 import styles from "./InfoButton.module.css";
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     className?: string;
@@ -11,10 +12,12 @@ interface Props {
 }
 
 export const InfoButton = ({ className, onClick }: Props) => {
+    const { t } = useTranslation();
+
     return (
         <div className={`${styles.container} ${className ?? ""}`} onClick={onClick}>
             <Info24Regular />
-            <Text>{"Info"}</Text>
+            <Text>{t('info')}</Text>
         </div>
     );
 };

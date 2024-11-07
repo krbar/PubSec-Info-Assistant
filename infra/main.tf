@@ -570,7 +570,7 @@ module "cognitiveServices" {
 module "searchServices" {
   source                        = "./core/search"
   name                          = var.searchServicesName != "" ? var.searchServicesName : "infoasst-search-${random_string.random.result}"
-  location                      = var.location
+  location                      = var.search_location
   tags                          = local.tags
   semanticSearch                = var.use_semantic_reranker ? "free" : null
   resourceGroupName             = azurerm_resource_group.rg.name

@@ -7,12 +7,14 @@ import { Label } from '@fluentui/react/lib/Label';
 import { Separator } from '@fluentui/react/lib/Separator';
 import { getInfoData, GetInfoResponse  } from "../../api";
 import appVersionInfo from '../../../version.json';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     className?: string;
 }
 
 export const InfoContent = ({ className }: Props) => {
+    const { t } = useTranslation();
     const [infoData, setInfoData] = useState<GetInfoResponse | null>(null);
 
     async function fetchInfoData() {

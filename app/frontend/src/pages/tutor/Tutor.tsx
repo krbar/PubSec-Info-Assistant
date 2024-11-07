@@ -12,8 +12,16 @@ import { MathFormatProfessionalFilled } from '@fluentui/react-icons';
 import { Example, ExampleModel } from '../../components/Example';
 import estyles from "../../components/Example/Example.module.css";
 import CharacterStreamer from '../../components/CharacterStreamer/CharacterStreamer';
+import { useTranslation } from 'react-i18next';
+
+enum ButtonValues {
+    Clues,
+    Solve,
+    Answer
+}
 
 const Tutor = () => {
+    const { t } = useTranslation();
     const [streamKey, setStreamKey] = useState(0);
     const [renderAnswer, setRenderAnswer] = useState(false);
     const [error, setError] = useState(false);
@@ -23,11 +31,11 @@ const Tutor = () => {
     const [selectedButton, setSelectedButton] = useState<string | null>(null);
     const eventSourceRef = useRef<EventSource | null>(null);
 
-    enum ButtonValues {
-        Clues = "Give Me Clues",
-        Solve = "Show Me How to Solve It",
-        Answer = "Show Me the Answer"
-    }
+    const getButtonValuesTranslated = (value: ButtonValues) => ({
+        [ButtonValues.Clues]: t('show_me_the_answer'),
+        [ButtonValues.Solve]: t('show_me_how_to_solve_it'),
+        [ButtonValues.Answer]: t('show_me_the_answer'),
+        })[value];
 
     const handleInput = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -95,14 +103,13 @@ const Tutor = () => {
         setMathProblem(value);
         getAnswer(value);
     }
-
     
-const EXAMPLES: ExampleModel[] = [
-    { text: "Determine the slope of the line passing through the points (2,5)(2,5) and (4,9)(4,9)", value: "Determine the slope of the line passing through the points (2,5)(2,5) and (4,9)(4,9)" },
-    { text: "Calculate the result of (9+3)×4−7", value: "Calculate the result of (9+3)×4−7" },
-    { text: "What's the answer for (4.5*2.1)^2.2?", value: "What's the answer for (4.5*2.1)^2.2?" },
-    { text: "Find the mean height of students in centimeters: 160, 165, 170, 175, 180.", value: "The heights (in centimeters) of students in a class are recorded as follows: 160, 165, 170, 175, 180. Find the mean height of the students." }
-];
+    const EXAMPLES: ExampleModel[] = [
+        { text: t('tutor_example_1'), value: t('tutor_example_1') },
+        { text: t('tutor_example_2'), value: t('tutor_example_2') },
+        { text: t('tutor_example_3'), value: t('tutor_example_3') },
+        { text: t('tutor_example_4'), value: t('tutor_example_4_value') }
+    ];
 
     const handleButton2Click = () => {
         setStreamKey(prevKey => prevKey + 1);
@@ -138,13 +145,13 @@ const EXAMPLES: ExampleModel[] = [
     
 return (
     <div className={styles.App}>
-    <MathFormatProfessionalFilled fontSize={"6rem"} primaryFill={"#8A0B31"} aria-hidden="true" aria-label="Supported File Types" />
+    <MathFormatProfessionalFilled fontSize={"6rem"} primaryFill={"#8A0B31"} aria-hidden="true" aria-label={t('supported_file_types')} />
     <h1 className={styles.title}>Math Assistant</h1>
     <span className={styles.chatEmptyObjectives}>
-      <i className={styles.centered}>Information Assistant uses AI. Check for mistakes.</i> <a href="https://github.com/microsoft/PubSec-Info-Assistant/blob/main/docs/transparency.md" target="_blank" rel="noopener noreferrer"> Transparency Note</a>
+      <i className={styles.centered}>{t('information_assistant_ai_note')}</i> <a href="https://github.com/microsoft/PubSec-Info-Assistant/blob/main/docs/transparency.md" target="_blank" rel="noopener noreferrer"> {t('transparency_note')}</a>
     </span>
     <div className={styles.centeredContainer}>
-    <p>Select an example query:</p>
+    <p>{t('select_an_example_query')}:</p>
     <div >
         <ul className={estyles.examplesNavList}>
             {EXAMPLES.map((x, i) => (
@@ -155,13 +162,13 @@ return (
         </ul>
     </div >
         <form className={styles.formClass} onSubmit={handleInput}>
-            <p className={styles.inputLabel}>Enter question:</p>
+            <p className={styles.inputLabel}>{t('enter_question')}:</p>
             <input
                 className={styles.inputField}
                 type="text"
                 value={mathProblem}
                 onChange={(e) => setMathProblem(e.target.value)}
-                placeholder="Enter question:"
+                placeholder={t('enter_question')}
             />
             <div className={styles.buttonContainer}>
             <Button variant="secondary"
@@ -171,7 +178,7 @@ return (
                     hinter(mathProblem);
                 }}
             >
-                {ButtonValues.Clues}
+                {getButtonValuesTranslated(ButtonValues.Clues)}
             </Button>
             <Button variant="secondary"
                 className={selectedButton === 'button2' ? styles.selectedButton : ''}
@@ -181,7 +188,7 @@ return (
                     handleButton2Click();
                 }}
             >
-                {ButtonValues.Solve}
+                {getButtonValuesTranslated(ButtonValues.Solve)}
             </Button>
             <Button variant="secondary"
                 className={selectedButton === 'button3' ? styles.selectedButton : ''}
@@ -190,7 +197,7 @@ return (
                     getAnswer(mathProblem);
                 }}
             >
-                {ButtonValues.Answer}
+                {getButtonValuesTranslated(ButtonValues.Answer)}
             </Button>
         </div>
         </form>

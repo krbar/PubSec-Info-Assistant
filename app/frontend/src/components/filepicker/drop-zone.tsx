@@ -4,8 +4,11 @@
 import { array, func } from "prop-types";
 import React from "react";
 import styles from "./drop-zone.module.css";
+import { useTranslation } from 'react-i18next';
 
 const Banner = ({ onClick, onDrop }: {onClick: any, onDrop: any}) => {
+  const { t } = useTranslation();
+
   const handleDragOver = (ev: any) => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -25,9 +28,9 @@ const Banner = ({ onClick, onDrop }: {onClick: any, onDrop: any}) => {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <span className={styles.banner_text}>Click to Add files</span>
-      <span className={styles.banner_text}>Or</span>
-      <span className={styles.banner_text}>Drag and Drop files here</span>
+      <span className={styles.banner_text}>{t('click_to_add_files')}</span>
+      <span className={styles.banner_text}>{t('or')}</span>
+      <span className={styles.banner_text}>{t('drag_and_drop_files_here')}</span>
     </div>
   );
 };
@@ -47,12 +50,14 @@ const DropZone = ({ onChange, accept = ["*"] }: {onChange: any, accept: string[]
     onChange(files);
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className={styles.wrapper}>
       <Banner onClick={handleClick} onDrop={handleDrop} />
       <input
         type="file"
-        aria-label="add files"
+        aria-label={t('add_files')}
         className={styles.input}
         ref={inputRef}
         multiple={true}

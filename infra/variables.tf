@@ -8,6 +8,12 @@ variable "location" {
   type        = string
 }
 
+variable "search_location" {
+  description = "Location of the Search Service"
+  type        = string
+  default     = "northeurope"
+}
+
 variable "resourceGroupName" {
   type    = string
   default = ""

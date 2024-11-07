@@ -2,14 +2,16 @@
 // Licensed under the MIT license.
 
 import { Outlet, NavLink, Link } from "react-router-dom";
-import openai from "../../assets/openai.svg";
+import websitelogo from "../../assets/bmf_logo.svg";
 import { WarningBanner } from "../../components/WarningBanner/WarningBanner";
 import styles from "./Layout.module.css";
 import { Title } from "../../components/Title/Title";
 import { getFeatureFlags, GetFeatureFlagsResponse } from "../../api";
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 export const Layout = () => {
+    const { t } = useTranslation();
     const [featureFlags, setFeatureFlags] = useState<GetFeatureFlagsResponse | null>(null);
 
     async function fetchFeatureFlags() {
@@ -32,36 +34,36 @@ export const Layout = () => {
                 <WarningBanner />
                 <div className={styles.headerContainer}>
                     <div className={styles.headerTitleContainer}>
-                        <img src={openai} alt="Azure OpenAI" className={styles.headerLogo} />
+                        <img src={websitelogo} alt="BMF" className={styles.headerLogo} />
                         <h3 className={styles.headerTitle}><Title /></h3>
                     </div>
                     <nav>
                         <ul className={styles.headerNavList}>
                             <li>
                                 <NavLink to="/" className={({ isActive }) => (isActive ? styles.headerNavPageLinkActive : styles.headerNavPageLink)}>
-                                    Chat
+                                {t('chat')}
                                 </NavLink>
                             </li>
                             <li className={styles.headerNavLeftMargin}>
                                 <NavLink to="/content" className={({ isActive }) => (isActive ? styles.headerNavPageLinkActive : styles.headerNavPageLink)}>
-                                    Manage Content
+                                {t('manage_content')}
                                 </NavLink>
                             </li>
                             {featureFlags?.ENABLE_MATH_ASSISTANT &&
                                 <li className={styles.headerNavLeftMargin}>
                                     <NavLink to="/tutor" className={({ isActive }) => (isActive ? styles.headerNavPageLinkActive : styles.headerNavPageLink)}>
-                                    Math Assistant
+                                    {t('math_assistant')}
                                     <br />  
-                                    <p className={styles.centered}>(preview)</p>
+                                    <p className={styles.centered}>({t('preview')})</p>
                                     </NavLink>
                                 </li>
                             }
                             {featureFlags?.ENABLE_TABULAR_DATA_ASSISTANT &&
                                 <li className={styles.headerNavLeftMargin}>
                                     <NavLink to="/tda" className={({ isActive }) => (isActive ? styles.headerNavPageLinkActive : styles.headerNavPageLink)}>
-                                    Tabular Data Assistant
+                                    {t('tabular_data_assistant')}
                                     <br />  
-                                    <p className={styles.centered}>(preview)</p>
+                                    <p className={styles.centered}>({t('preview')})</p>
                                     </NavLink>
                                     
                                       

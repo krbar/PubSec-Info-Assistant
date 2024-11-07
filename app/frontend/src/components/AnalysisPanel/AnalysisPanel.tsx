@@ -13,6 +13,7 @@ import styles from "./AnalysisPanel.module.css";
 import { SupportingContent } from "../SupportingContent";
 import { ChatResponse, ActiveCitation, getCitationObj, fetchCitationFile, FetchCitationFileResponse } from "../../api";
 import { AnalysisPanelTabs } from "./AnalysisPanelTabs";
+import { useTranslation } from 'react-i18next';
 import React from "react";
 
 interface Props {
@@ -32,7 +33,8 @@ const pivotItemDisabledStyle: React.CSSProperties = {
 };
 
 export const AnalysisPanel = ({ answer, activeTab, activeCitation, sourceFile, pageNumber, citationHeight, className, onActiveTabChanged }: Props) => {
-    
+    const { t } = useTranslation();
+
     const [innerPivotTab, setInnerPivotTab] = useState<string>('indexedFile');
     const [activeCitationObj, setActiveCitationObj] = useState<ActiveCitation>();
     const [markdownContent, setMarkdownContent] = useState('');
@@ -162,7 +164,7 @@ export const AnalysisPanel = ({ answer, activeTab, activeCitation, sourceFile, p
         >
             <PivotItem
                 itemKey={AnalysisPanelTabs.ThoughtProcessTab}
-                headerText="Thought process"
+                headerText={t('thought_process')}
                 headerButtonProps={isDisabledThoughtProcessTab ? { disabled: true, style: pivotItemDisabledStyle } : undefined}
                 
             >
@@ -171,13 +173,13 @@ export const AnalysisPanel = ({ answer, activeTab, activeCitation, sourceFile, p
             
             <PivotItem
                 itemKey={AnalysisPanelTabs.SupportingContentTab}
-                headerText="Supporting content"
+                headerText={t('supporting_content')}
                 
                 headerButtonProps={{
                     disabled: isDisabledSupportingContentTab,
                     style: isDisabledSupportingContentTab ?  pivotItemDisabledStyle : undefined,
                 }}
-                onRenderItemLink = {onRenderItemLink("Supporting content is unavailable.", tooltipRef2, isDisabledSupportingContentTab)}
+                onRenderItemLink = {onRenderItemLink(t('supporting_content_is_unavailable'), tooltipRef2, isDisabledSupportingContentTab)}
             >
                 <SupportingContent supportingContent={answer.data_points} />
             </PivotItem>
@@ -186,12 +188,12 @@ export const AnalysisPanel = ({ answer, activeTab, activeCitation, sourceFile, p
             <PivotItem
                 itemKey={AnalysisPanelTabs.CitationTab}
                 
-                headerText="Citation"
+                headerText={t('citation')}
                 headerButtonProps={{
                     disabled: isDisabledCitationTab,
                     style: isDisabledCitationTab ?  pivotItemDisabledStyle : undefined,
                 }}
-                onRenderItemLink = {onRenderItemLink("No active citation selected. Please select a citation from the citations list on the left.", tooltipRef3, isDisabledCitationTab)}
+                onRenderItemLink = {onRenderItemLink(t('no_active_citation_selected'), tooltipRef3, isDisabledCitationTab)}
             > 
             
                 <Pivot className={className} selectedKey={innerPivotTab} onLinkClick={(item) => {
@@ -202,25 +204,25 @@ export const AnalysisPanel = ({ answer, activeTab, activeCitation, sourceFile, p
                         console.warn('Item is undefined');
                     }
                 }}>
-                    <PivotItem itemKey="indexedFile" headerText="Document Section">
+                    <PivotItem itemKey="indexedFile" headerText={t('document_section')}>
                         {activeCitationObj === undefined ? (
-                            <Text>Loading...</Text>
+                            <Text>{t('loading')}</Text>
                         ) : 
                         (
                             <div>
-                                <Separator>Metadata</Separator>
-                                <Label>File Name</Label><Text>{activeCitationObj.file_name}</Text>
-                                <Label>File URI</Label><Text>{activeCitationObj.file_uri}</Text>
-                                <Label>Title</Label><Text>{activeCitationObj.title}</Text>
-                                <Label>Section</Label><Text>{activeCitationObj.section}</Text>
-                                <Label>Page Number(s)</Label><Text>{activeCitationObj.pages?.join(",")}</Text>
-                                <Label>Token Count</Label><Text>{activeCitationObj.token_count}</Text>
-                                <Separator>Content</Separator>
-                                <Label>Content</Label><Text>{activeCitationObj.content}</Text>
+                                <Separator>{t('metadata')}</Separator>
+                                <Label>{t('filename')}</Label><Text>{activeCitationObj.file_name}</Text>
+                                <Label>{t('file_uri')}</Label><Text>{activeCitationObj.file_uri}</Text>
+                                <Label>{t('title')}</Label><Text>{activeCitationObj.title}</Text>
+                                <Label>{t('section')}</Label><Text>{activeCitationObj.section}</Text>
+                                <Label>{t('page_number')}</Label><Text>{activeCitationObj.pages?.join(",")}</Text>
+                                <Label>{t('token_count')}</Label><Text>{activeCitationObj.token_count}</Text>
+                                <Separator>{t('content')}</Separator>
+                                <Label>{t('content')}</Label><Text>{activeCitationObj.content}</Text>
                             </div>
                         )}
                     </PivotItem>
-                    <PivotItem itemKey="rawFile" headerText="Document">
+                    <PivotItem itemKey="rawFile" headerText={t('document')}>
                         {getCitationURL() === '' ? (
                             <Text>Loading...</Text>
                         ) : ["docx", "xlsx", "pptx"].includes(sourceFileExt) ? (
@@ -237,7 +239,7 @@ export const AnalysisPanel = ({ answer, activeTab, activeCitation, sourceFile, p
                             <pre>{plainTextContent}</pre>
                         ) : (
                             // Default to iframe for other file types
-                            <iframe title="Source File" src={getCitationURL()} width="100%" height={citationHeight} />
+                            <iframe title={t('source_file')} src={getCitationURL()} width="100%" height={citationHeight} />
                         )}
                     </PivotItem>
                 </Pivot>

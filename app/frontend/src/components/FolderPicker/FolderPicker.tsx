@@ -21,6 +21,7 @@ import { IButtonProps } from '@fluentui/react/lib/Button';
 
 import { getFolders } from "../../api";
 import styles from "./FolderPicker.module.css";
+import { useTranslation } from 'react-i18next';
 
 var allowNewFolders = false;
 
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export const FolderPicker = ({allowFolderCreation, onSelectedKeyChange, preSelectedKeys, hide}: Props) => {
+    const { t } = useTranslation();
 
     const buttonId = useId('targetButton');
     const tooltipId = useId('folderpicker-tooltip');
@@ -63,7 +65,7 @@ export const FolderPicker = ({allowFolderCreation, onSelectedKeyChange, preSelec
     const teachingBubblePrimaryButtonClick = () => {
         const textField = document.getElementById(textFieldId) as HTMLInputElement;
         if (!textField.defaultValue || textField.defaultValue.trim() === '') {
-            alert('Please enter a folder name.');
+            alert(t('please_enter_a_folder_name'));
         } else {
             // add the folder to the dropdown list and select it
             // This will be passed to the file-picker component to determine the folder to upload to
@@ -78,15 +80,15 @@ export const FolderPicker = ({allowFolderCreation, onSelectedKeyChange, preSelec
     };
 
     const examplePrimaryButtonProps: IButtonProps = {
-        children: 'Create folder',
+        children: t('create_folder'),
         onClick: teachingBubblePrimaryButtonClick,
     };
 
     async function fetchBlobFolderData() {
         try {
             const newOptions: IComboBoxOption[] = allowNewFolders ? [] : [
-                { key: 'selectAll', text: 'Select All', itemType: SelectableOptionMenuItemType.SelectAll },
-                { key: 'FolderHeader', text: 'Folders', itemType: SelectableOptionMenuItemType.Header }];
+                { key: 'selectAll', text: t('select_all'), itemType: SelectableOptionMenuItemType.SelectAll },
+                { key: 'FolderHeader', text: t('folders'), itemType: SelectableOptionMenuItemType.Header }];
             const folders = await getFolders();
             newOptions.push(...folders.map((folder: string) => ({ key: folder, text: folder })));
             setOptions(newOptions);
@@ -182,12 +184,12 @@ export const FolderPicker = ({allowFolderCreation, onSelectedKeyChange, preSelec
                 <ComboBox
                     multiSelect={allowNewFolders? false : true}
                     selectedKey={selectedKeys}
-                    label={allowNewFolders? "Folder Selection" : "Folder Selection (Select multiple folders)"}
+                    label={allowNewFolders? t('folder_selection') : t('folder_select_multiple')}
                     options={options}
                     onChange={onChange}
                     styles={comboBoxStyles}
                 />
-                <TooltipHost content={allowNewFolders ? "Select a folder to upload documents into" : "Select a folder to filter the search by"}
+                <TooltipHost content={allowNewFolders ? t('select_a_folder_to_upload_documents_to') : t('select_a_folder_to_filter_the_search_by')}
                         styles={hostStyles}
                         id={tooltipId}>
                     <Info16Regular></Info16Regular>
@@ -200,19 +202,19 @@ export const FolderPicker = ({allowFolderCreation, onSelectedKeyChange, preSelec
                         allowDisabledFocus
                         onClick={toggleTeachingBubbleVisible}
                         id={buttonId}>
-                        Create new folder
+                        {t('create_new_folder')}
                     </ActionButton>
                     {teachingBubbleVisible && (
                         <TeachingBubble
                         target={`#${buttonId}`}
                         primaryButtonProps={examplePrimaryButtonProps}
                         onDismiss={toggleTeachingBubbleVisible}
-                        headline="Create new folder"
+                        headline={t('create_a_new_folder')}
                         calloutProps={{ directionalHint: DirectionalHint.topCenter }}
                         styles={teachingBubbleStyles}
                         hasCloseButton={true}
                         >
-                        <TextField id={textFieldId} label='Folder Name:' required={true} styles={getStyles}/>
+                        <TextField id={textFieldId} label={t('folder_name') + ":"} required={true} styles={getStyles}/>
                         </TeachingBubble>
                     )}
                 </div>) : ""}

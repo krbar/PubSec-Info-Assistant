@@ -6,6 +6,7 @@ import { Text } from "@fluentui/react";
 import { Label } from '@fluentui/react/lib/Label';
 import { Separator } from '@fluentui/react/lib/Separator';
 import { getInfoData, GetInfoResponse } from "../../api";
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     className?: string;
@@ -17,6 +18,7 @@ interface Stat {
     // include other properties of 'stat' here
 }
 export const StatusContent = ({ item }: Props) => {
+    const { t } = useTranslation();
     const data = item.status_updates.reverse();
     // .sort((a: any, b: any) => new Date(b.status_timestamp).getTime() - new Date(a.status_timestamp).getTime());
     const DisplayData=data.map(
@@ -36,8 +38,8 @@ export const StatusContent = ({ item }: Props) => {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                    <th>Status</th>
-                    <th>Timestamp</th>
+                    <th>{t('status')}</th>
+                    <th>{t('timestamp')}</th>
                     </tr>
                 </thead>
                 <tbody>

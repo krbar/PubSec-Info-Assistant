@@ -8,6 +8,7 @@ import { DocumentsDetailList, IDocument } from "./DocumentsDetailList";
 import { ArrowClockwise24Filled } from "@fluentui/react-icons";
 import { animated, useSpring } from "@react-spring/web";
 import { getAllUploadStatus, FileUploadBasicStatus, GetUploadStatusRequest, FileState, getFolders, getTags } from "../../api";
+import { useTranslation } from 'react-i18next';
 
 import styles from "./FileStatus.module.css";
 
@@ -16,37 +17,39 @@ const dropdownFileStateStyles: Partial<IDropdownStyles> = { dropdown: { width: 2
 const dropdownFolderStyles: Partial<IDropdownStyles> = { dropdown: { width: 200 } };
 const dropdownTagStyles: Partial<IDropdownStyles> = { dropdown: { width: 200 } };
 
-const dropdownTimespanOptions = [
-    { key: 'Time Range', text: 'End time range', itemType: DropdownMenuItemType.Header },
-    { key: '4hours', text: '4 hours' },
-    { key: '12hours', text: '12 hours' },
-    { key: '24hours', text: '24 hours' },
-    { key: '7days', text: '7 days' },
-    { key: '30days', text: '30 days' },
-    { key: '-1days', text: 'All' },
-  ];
-
-const dropdownFileStateOptions = [
-    { key: 'FileStates', text: 'File States', itemType: DropdownMenuItemType.Header },
-    { key: FileState.All, text: 'All' },
-    { key: FileState.Complete, text: 'Complete' },
-    { key: FileState.Error, text: 'Error' },
-    { key: FileState.Processing, text: 'Processing' },
-    { key: FileState.Indexing, text: 'Indexing' },
-    { key: FileState.Queued, text: 'Queued' },
-    { key: FileState.Skipped, text: 'Skipped'},
-    { key: FileState.UPLOADED, text: 'Uploaded'},
-    { key: FileState.THROTTLED, text: 'Throttled'},    
-    { key: FileState.DELETING, text: 'Deleting'},  
-    { key: FileState.DELETED, text: 'Deleted'},  
-  ];
-
 
 interface Props {
     className?: string;
 }
 
 export const FileStatus = ({ className }: Props) => {
+    const { t } = useTranslation();
+
+    const dropdownTimespanOptions = [
+        { key: 'Time Range', text: t('end_time_range'), itemType: DropdownMenuItemType.Header },
+        { key: '4hours', text: '4' +  t('hours') },
+        { key: '12hours', text: '12' +  t('hours') },
+        { key: '24hours', text: '24' +  t('hours') },
+        { key: '7days', text: '7' +  t('days') },
+        { key: '30days', text: '30' +  t('days') },
+        { key: '-1days', text: t('all') },
+    ];
+
+    const dropdownFileStateOptions = [
+        { key: 'FileStates', text: t('file_states'), itemType: DropdownMenuItemType.Header },
+        { key: FileState.All, text: t('all')},
+        { key: FileState.Complete, text: t('complete')},
+        { key: FileState.Error, text: t('error')},
+        { key: FileState.Processing, text: t('processing')},
+        { key: FileState.Indexing, text: t('indexing')},
+        { key: FileState.Queued, text: t('queued')},
+        { key: FileState.Skipped, text: t('skipped')},
+        { key: FileState.UPLOADED, text: t('uploaded')},
+        { key: FileState.THROTTLED, text: t('throttled')},    
+        { key: FileState.DELETING, text: t('deleting')},  
+        { key: FileState.DELETED, text: t('deleted')},  
+    ];
+
     const [selectedTimeFrameItem, setSelectedTimeFrameItem] = useState<IDropdownOption>();
     const [selectedFileStateItem, setSelectedFileStateItem] = useState<IDropdownOption>();
     const [SelectedFolderItem, setSelectedFolderItem] = useState<IDropdownOption>();
@@ -154,7 +157,7 @@ export const FileStatus = ({ className }: Props) => {
         const items: IDocument[] = [];
         for (let i = 0; i < fileList.length; i++) {
             let fileExtension = fileList[i].file_name.split('.').pop();
-            fileExtension = fileExtension == undefined ? 'Folder' : fileExtension.toUpperCase()
+            fileExtension = fileExtension == undefined ? t('folder') : fileExtension.toUpperCase()
             try {
                 items.push({
                     key: fileList[i].id,
@@ -201,37 +204,37 @@ export const FileStatus = ({ className }: Props) => {
         <div className={styles.container}>
             <div className={`${styles.options} ${className ?? ""}`} >
                 <Dropdown
-                        label="Uploaded in last:"
+                        label={t('uploaded_in_last') + ":"}
                         defaultSelectedKey='4hours'
                         onChange={onTimeSpanChange}
-                        placeholder="Select a time range"
+                        placeholder={t('select_a_time_range')}
                         options={dropdownTimespanOptions}
                         styles={dropdownTimespanStyles}
                         aria-label="timespan options for file statuses to be displayed"
                     />
                 <Dropdown
-                        label="File State:"
+                        label={t('file_state') + ":"}
                         defaultSelectedKey={'ALL'}
                         onChange={onFileStateChange}
-                        placeholder="Select file states"
+                        placeholder={t('select_file_states')}
                         options={dropdownFileStateOptions}
                         styles={dropdownFileStateStyles}
                         aria-label="file state options for file statuses to be displayed"
                     />
                 <Dropdown
-                    label="Folder:"
+                    label={t('folder') + ":"}
                     defaultSelectedKey={'Root'}
                     onChange={onFolderChange}
-                    placeholder="Select folder"
+                    placeholder={t('select_a_folder')}
                     options={folderOptions}
                     styles={dropdownFolderStyles}
                     aria-label="folder options for file statuses to be displayed"
                 />
                 <Dropdown
-                    label="Tag:"
+                    label={t('tag') + ":"}
                     defaultSelectedKey={'All'}
                     onChange={onTagChange}
-                    placeholder="Select a tag"
+                    placeholder={t('select_a_tag')}
                     options={tagOptions}
                     styles={dropdownTagStyles}
                     aria-label="tag options for file statuses to be displayed"
@@ -242,7 +245,7 @@ export const FileStatus = ({ className }: Props) => {
                      <Stack className={styles.loadingContainer} verticalAlign="space-between">
                         <Stack.Item grow>
                             <p className={styles.loadingText}>
-                                Getting file statuses
+                                {t('getting_file_statuses')}
                                 <span className={styles.loadingdots} />
                             </p>
                         </Stack.Item>

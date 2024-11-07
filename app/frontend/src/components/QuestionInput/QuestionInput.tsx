@@ -8,6 +8,7 @@ import { RAIPanel } from "../RAIPanel";
 
 import styles from "./QuestionInput.module.css";
 import { Button } from "react-bootstrap";
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     onSend: (question: string) => void;
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export const QuestionInput = ({ onSend, disabled, placeholder, clearOnSend, onAdjustClick, showClearChat, onClearClick, onRegenerateClick }: Props) => {
+    const { t } = useTranslation();
     const [question, setQuestion] = useState<string>("");
 
     const sendQuestion = () => {
@@ -71,13 +73,13 @@ export const QuestionInput = ({ onSend, disabled, placeholder, clearOnSend, onAd
                     <div className={styles.questionClearButtonsContainer}>
                         <div
                             className={styles.questionClearChatButton}
-                            aria-label="Clear chat button"
+                            aria-label={t('clear_chat') + "button"}
                             onClick={onClearClick}
                             onMouseEnter={onMouseEnter}
                             onMouseLeave={onMouseLeave}
                         >
                             <Broom28Filled primaryFill="rgba(255, 255, 255, 1)" />
-                            <span id={"test"} hidden={clearChatTextEnabled}>Clear Chat</span>
+                            <span id={"test"} hidden={clearChatTextEnabled}>{t('clear_chat')}</span>
                         </div>
                     </div>
                 )
